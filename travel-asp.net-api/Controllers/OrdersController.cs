@@ -56,10 +56,7 @@ namespace travel_asp.net_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
-            if (id != order.Id)
-            {
-                return BadRequest();
-            }
+          
 
             _context.Entry(order).State = EntityState.Modified;
 

@@ -55,10 +55,7 @@ namespace travel_asp.net_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExcursion(int id, Excursion excursion)
         {
-            if (id != excursion.Id)
-            {
-                return BadRequest();
-            }
+            
 
             _context.Entry(excursion).State = EntityState.Modified;
 
