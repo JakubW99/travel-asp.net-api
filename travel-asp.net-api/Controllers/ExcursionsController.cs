@@ -50,12 +50,11 @@ namespace travel_asp.net_api.Controllers
             return excursion;
         }
 
-        // PUT: api/Excursions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/Excursions/id      
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExcursion(int id, Excursion excursion)
         {
-            
+            excursion.Id = id;
 
             _context.Entry(excursion).State = EntityState.Modified;
 
@@ -75,9 +74,12 @@ namespace travel_asp.net_api.Controllers
                 }
             }
 
-            return NoContent();
+          return Created($"api/excurions/{id}", excursion);
         }
-
+        private bool ExcursionExists(int id)
+        {
+            return (_context.Excursions?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
         // POST: api/Excursions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -113,9 +115,6 @@ namespace travel_asp.net_api.Controllers
             return NoContent();
         }
 
-        private bool ExcursionExists(int id)
-        {
-            return (_context.Excursions?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+       
     }
 }
