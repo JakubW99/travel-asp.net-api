@@ -37,7 +37,8 @@ namespace travel_asp.net_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-          if (_context.Orders == null)
+            var userExcursions = await _context.UserExcursions.ToListAsync();
+            if (_context.Orders == null)
           {
               return NotFound();
           }
@@ -56,7 +57,7 @@ namespace travel_asp.net_api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order order)
         {
-          
+            order.Id = id;
 
             _context.Entry(order).State = EntityState.Modified;
 
@@ -76,7 +77,7 @@ namespace travel_asp.net_api.Controllers
                 }
             }
 
-            return NoContent();
+            return Created($"api/orders/{id}", order);
         }
 
         // POST: api/Orders
