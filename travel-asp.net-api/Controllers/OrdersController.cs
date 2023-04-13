@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +23,8 @@ namespace travel_asp.net_api.Controllers
         {
             _context = context;
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // GET: api/Orders
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
@@ -32,7 +36,8 @@ namespace travel_asp.net_api.Controllers
           }
             return await _context.Orders.ToListAsync();
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // GET: api/Orders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
@@ -51,7 +56,8 @@ namespace travel_asp.net_api.Controllers
 
             return order;
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // PUT: api/Orders/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -79,7 +85,8 @@ namespace travel_asp.net_api.Controllers
 
             return Created($"api/orders/{id}", order);
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize]
         // POST: api/Orders
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -94,7 +101,8 @@ namespace travel_asp.net_api.Controllers
 
             return CreatedAtAction("GetOrder", new { id = order.Id }, order);
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // DELETE: api/Orders/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)

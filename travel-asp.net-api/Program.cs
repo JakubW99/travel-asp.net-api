@@ -1,5 +1,10 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using travel_asp.net_api.Authentication;
 
 namespace travel_asp.net_api
 {
@@ -8,37 +13,64 @@ namespace travel_asp.net_api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+           
             // Add services to the container.
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins,
+                options.AddPolicy("MyPolicy",
                                       policy =>
                                       {
-                                          policy.WithOrigins("https://excursions.bsite.net/")
-                                                              .AllowAnyHeader()
-                                                              .AllowAnyMethod();
+                                          policy.WithOrigins("*")
+                                                 .AllowAnyHeader()
+                                                 .AllowAnyMethod();
                                       });
             });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<ApplicationDbContext>(
-            options => options.UseSqlServer("Server=workstation id=excursions.mssql.somee.com;packet size=4096;user id=acos_SQLLogin_1;pwd=3o9n2tzdro;data source=excursions.mssql.somee.com;persist security info=False;initial catalog=excursions;TrustServerCertificate=True;"));
-            var app = builder.Build();
+            builder.Services.AddDbContext<ApplicationDbContext>(options => 
+            options.UseSqlServer(builder.Configuration.GetConnectionString("ConnStr")));
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+     .AddEntityFrameworkStores<ApplicationDbContext>()
+     .AddDefaultTokenProviders();
 
+            // Adding Authentication  
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            // Adding Jwt Bearer  
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["JWT:ValidAudience"],
+                    ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Secret"]))
+                };
+            });
+        
+        var app = builder.Build();
+            app.UseCors("MyPolicy");
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+          
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
+            app.UseDefaultFiles();
             app.UseStaticFiles();
             app.MapControllers();
 

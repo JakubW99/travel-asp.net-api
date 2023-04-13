@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +22,7 @@ namespace travel_asp.net_api.Controllers
         {
             _context = context;
         }
-
+        [EnableCors("MyPolicy")]
         // GET: api/Excursions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Excursion>>> GetExcursions()
@@ -31,7 +33,7 @@ namespace travel_asp.net_api.Controllers
           }
             return await _context.Excursions.ToListAsync();
         }
-
+        [EnableCors("MyPolicy")]
         // GET: api/Excursions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Excursion>> GetExcursion(int id)
@@ -49,7 +51,8 @@ namespace travel_asp.net_api.Controllers
 
             return excursion;
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles="Admin")]
         // PUT: api/Excursions/id      
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExcursion(int id, Excursion excursion)
@@ -80,6 +83,8 @@ namespace travel_asp.net_api.Controllers
         {
             return (_context.Excursions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // POST: api/Excursions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -94,7 +99,8 @@ namespace travel_asp.net_api.Controllers
 
             return CreatedAtAction("GetExcursion", new { id = excursion.Id }, excursion);
         }
-
+        [EnableCors("MyPolicy")]
+        [Authorize(Roles = "Admin")]
         // DELETE: api/Excursions/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExcursion(int id)
