@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using travel_asp.net_api.Authentication;
-
+using Newtonsoft.Json;
 namespace travel_asp.net_api
 {
     public class Program
@@ -25,7 +25,10 @@ namespace travel_asp.net_api
                                                  .AllowAnyMethod();
                                       });
             });
-            builder.Services.AddControllers();
+
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+ );
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

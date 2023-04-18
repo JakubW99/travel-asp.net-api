@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using travel_asp.net_api;
+using NuGet.Versioning;
 using travel_asp.net_api.Models;
+using travel_asp.net_api.ViewModels;
 
 namespace travel_asp.net_api.Controllers
 {
@@ -17,32 +13,37 @@ namespace travel_asp.net_api.Controllers
     public class ExcursionsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
+       
         public ExcursionsController(ApplicationDbContext context)
         {
             _context = context;
+        
         }
+       
         [EnableCors("MyPolicy")]
         // GET: api/Excursions
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Excursion>>> GetExcursions()
         {
-          if (_context.Excursions == null)
-          {
-              return NotFound();
-          }
-            return await _context.Excursions.ToListAsync();
+           
+            if (_context.Excursions == null)
+            {
+                return NotFound();
+            }
+            return await _context.Excursions.Include(x => x.Images).ToListAsync();
         }
         [EnableCors("MyPolicy")]
         // GET: api/Excursions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Excursion>> GetExcursion(int id)
         {
-          if (_context.Excursions == null)
-          {
-              return NotFound();
-          }
-            var excursion = await _context.Excursions.FindAsync(id);
+
+            if (_context.Excursions == null)
+            {
+                return NotFound();
+            }
+
+            var excursion = await _context.Excursions.Include(x => x.Images).FirstAsync(x => x.Id == id);
 
             if (excursion == null)
             {
@@ -52,7 +53,7 @@ namespace travel_asp.net_api.Controllers
             return excursion;
         }
         [EnableCors("MyPolicy")]
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles = "Admin")]
         // PUT: api/Excursions/id      
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExcursion(int id, Excursion excursion)
@@ -77,7 +78,7 @@ namespace travel_asp.net_api.Controllers
                 }
             }
 
-          return Created($"api/excurions/{id}", excursion);
+            return Created($"api/excurions/{id}", excursion);
         }
         private bool ExcursionExists(int id)
         {
@@ -90,10 +91,10 @@ namespace travel_asp.net_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Excursion>> PostExcursion(Excursion excursion)
         {
-          if (_context.Excursions == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Excursions'  is null.");
-          }
+            if (_context.Excursions == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Excursions'  is null.");
+            }
             _context.Excursions.Add(excursion);
             await _context.SaveChangesAsync();
 
@@ -121,6 +122,6 @@ namespace travel_asp.net_api.Controllers
             return NoContent();
         }
 
-       
+
     }
 }

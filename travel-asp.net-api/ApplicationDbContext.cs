@@ -16,6 +16,8 @@ namespace travel_asp.net_api
         public DbSet<Order> Orders { get; set; }
 
         public DbSet<UserExcursion> UserExcursions { get; set; }
+
+        public DbSet<Image> Images { get; set; }
       
     }
 }

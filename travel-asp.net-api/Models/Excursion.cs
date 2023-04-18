@@ -18,6 +18,8 @@ namespace travel_asp.net_api.Models
         public int ChildPrice { get; set;}
         [Required]
         public string Description { get; set; }
+
+        public List<Image> Images { get; set; }
       
     }
     
