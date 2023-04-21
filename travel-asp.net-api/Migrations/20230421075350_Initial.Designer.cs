@@ -12,8 +12,8 @@ using travel_asp.net_api;
 namespace travel_asp.net_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230412163630_initial")]
-    partial class initial
+    [Migration("20230421075350_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,6 +250,28 @@ namespace travel_asp.net_api.Migrations
                     b.ToTable("Excursions");
                 });
 
+            modelBuilder.Entity("travel_asp.net_api.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ExcursionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExcursionId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("travel_asp.net_api.Models.Order", b =>
                 {
                     b.Property<int>("Id")
@@ -355,11 +377,27 @@ namespace travel_asp.net_api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("travel_asp.net_api.Models.Image", b =>
+                {
+                    b.HasOne("travel_asp.net_api.Models.Excursion", "Excursion")
+                        .WithMany("Images")
+                        .HasForeignKey("ExcursionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Excursion");
+                });
+
             modelBuilder.Entity("travel_asp.net_api.Models.UserExcursion", b =>
                 {
                     b.HasOne("travel_asp.net_api.Models.Order", null)
                         .WithMany("UserExcursions")
                         .HasForeignKey("OrderId");
+                });
+
+            modelBuilder.Entity("travel_asp.net_api.Models.Excursion", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("travel_asp.net_api.Models.Order", b =>

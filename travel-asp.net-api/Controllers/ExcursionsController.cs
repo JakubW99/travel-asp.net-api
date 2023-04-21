@@ -30,7 +30,7 @@ namespace travel_asp.net_api.Controllers
             {
                 return NotFound();
             }
-            return await _context.Excursions.Include(x => x.Images).ToListAsync();
+            return await _context.Excursions.AsNoTracking().Include(x => x.Images).ToListAsync();
         }
         [EnableCors("MyPolicy")]
         // GET: api/Excursions/5
@@ -43,7 +43,7 @@ namespace travel_asp.net_api.Controllers
                 return NotFound();
             }
 
-            var excursion = await _context.Excursions.Include(x => x.Images).FirstAsync(x => x.Id == id);
+            var excursion = await _context.Excursions.AsNoTracking().Include(x => x.Images).FirstAsync(x => x.Id == id);
 
             if (excursion == null)
             {
@@ -85,7 +85,7 @@ namespace travel_asp.net_api.Controllers
             return (_context.Excursions?.Any(e => e.Id == id)).GetValueOrDefault();
         }
         [EnableCors("MyPolicy")]
-        [Authorize(Roles = "Admin")]
+      [Authorize(Roles = "Admin")]
         // POST: api/Excursions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

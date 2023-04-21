@@ -241,7 +241,7 @@ namespace travel_asp.net_api.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-                   
+
                     b.HasKey("Id");
 
                     b.ToTable("Excursions");
@@ -384,7 +384,6 @@ namespace travel_asp.net_api.Migrations
 
                     b.Navigation("Excursion");
                 });
-        
 
             modelBuilder.Entity("travel_asp.net_api.Models.UserExcursion", b =>
                 {

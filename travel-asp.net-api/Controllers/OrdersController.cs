@@ -29,12 +29,11 @@ namespace travel_asp.net_api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            var userExcursions = await _context.UserExcursions.ToListAsync();
           if (_context.Orders == null)
           {
               return NotFound();
           }
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.AsNoTracking().Include(x=>x.UserExcursions).ToListAsync();
         }
         [EnableCors("MyPolicy")]
         [Authorize(Roles = "Admin")]
@@ -42,12 +41,12 @@ namespace travel_asp.net_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Order>> GetOrder(int id)
         {
-            var userExcursions = await _context.UserExcursions.ToListAsync();
+           
             if (_context.Orders == null)
           {
               return NotFound();
           }
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.AsNoTracking().Include(x=> x.UserExcursions).Where(x=>x.Id == id).FirstAsync();
             
             if (order == null)
             {
