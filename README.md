@@ -1,7 +1,8 @@
 # Travel API
 
 Stack:
-- ASP.net
+- C#/.NET
+- ASP.NET
 - Microsoft SQL Server
 - Entity Framework
 
