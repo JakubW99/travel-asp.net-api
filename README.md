@@ -13,6 +13,9 @@ authenticated users can also order excursions, user authenticated as administrat
 GET all users and orders of specified user.
 
 
+You can check this api on https://excursions.bsite.net/api
+(use endpoints mentioned on screenshot below)
+
 #Swagger screenshot:
 ![image](https://user-images.githubusercontent.com/92157165/234266464-8efad161-e7bb-4559-8751-06c07ee6e790.png)
 
