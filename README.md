@@ -17,7 +17,7 @@ GET all users and orders of specified user.
 You can check this api on https://excursions.bsite.net/api
 (use endpoints mentioned on screenshot below)
 
-Full application(in progress) - https://excursions.bsite.net/
+Full application(Frontend in progress) - https://excursions.bsite.net/
 (Frontend made by https://github.com/PiotrWojcikievcz)
 
 #Swagger screenshot:
