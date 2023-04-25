@@ -26,4 +26,4 @@ Full application(Frontend in progress) - https://excursions.bsite.net/
 
 
 USAGE:
-Create MS SQL database and add appsettings.json to app directory.
+Create MS SQL database and add appsettings.json with database connection string to app directory.
