@@ -19,4 +19,4 @@ GET all users and orders of specified user.
 
 
 USAGE:
-Create MS SQL database and change appsettings.json in app directory.
+Create MS SQL database and add appsettings.json to app directory.
